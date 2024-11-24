@@ -16,6 +16,14 @@ const Login = () => {
             setError("Please enter a valid email address.")
             return
         }
+
+        if (!password) {
+            setError("Please enter the password")
+            return
+        }
+        setError("")
+
+        //Login API Call
     }
 
   return (
@@ -33,7 +41,7 @@ const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <PasswordInput value={password} onchange={(e) => setPassword()} />
+                    <PasswordInput value={password} onchange={(e) => setPassword(e.target.value)} />
                     {error && <p className=' text-red-500 text-xs pb-1'>{error}</p>}
                     <button className=' btn-primary' type='submit'>
                         Login
