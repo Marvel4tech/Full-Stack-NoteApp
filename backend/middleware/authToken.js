@@ -9,7 +9,13 @@ export const authenticateToken = (req, res, next) => {
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.status(401).json({ message: "Invalid token" })
+        if (err) {
+            return res.status(403).json({ message: "Invalid token" })
+        }
+
+        if (!user || !user._id) {
+            return res.status(401).json({ message: "User not authenticated." });
+        }   
         req.user = user;
         next();
     })
