@@ -81,4 +81,62 @@ export const editNote = async (req, res) => {
         console.log(error)
         res.status(500).json({ error: true, message: "Internal Server Error" })
     }
+
+    // A more efficient easier method to update using FindByIdAndUpdate
+    /* export const editNote = async (req, res) => {
+        const noteId = req.params.noteId;
+        const { title, content, tags, isPinned } = req.body;
+        const { user } = req;
+    
+        // Check if at least one field is provided to update
+        if (!title && !content && !tags && isPinned === undefined) {
+            return res.status(400).json({ error: true, message: "Please provide at least one field to update." });
+        }
+    
+        // Create an object with the fields to update
+        const updateFields = {};
+        if (title) updateFields.title = title;
+        if (content) updateFields.content = content;
+        if (tags) updateFields.tags = tags;
+        if (isPinned !== undefined) updateFields.isPinned = isPinned; // Check for undefined to allow false value
+    
+        try {
+            const updatedNote = await Note.findByIdAndUpdate(
+                noteId,
+                { $set: updateFields },
+                { new: true, runValidators: true }
+            );
+    
+            // Check if the note was found and updated
+            if (!updatedNote) {
+                return res.status(404).json({ message: "Note not found." });
+            }
+    
+            console.log({ message: "Note updated successfully", updatedNote });
+            return res.status(200).json({ error: false, message: "Note updated successfully", updatedNote });
+    
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: true, message: "Internal Server Error" });
+        }
+    } */
+}
+
+export const deleteNote = async (req, res) => {
+    const noteId = req.params.noteId;
+    const { user } = req;
+
+    try {
+        const deletedNote = await Note.findOneAndDelete({ _id: noteId, userId: user._id })
+
+        if (!deletedNote) {
+            return res.status(404).json({ message: "Note not found" })
+        }
+
+        return res.status(200).json({ message: "Note is deleted successfully", deletedNote })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "An error occurred while deleting the note." });
+        
+    }
 }
