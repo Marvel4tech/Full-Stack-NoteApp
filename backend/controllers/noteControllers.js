@@ -1,5 +1,16 @@
 import Note from "../models/noteModel.js"
 
+export const getAllNotes = async (req, res) => {
+    const { user } = req;
+    try {
+        const notes = await Note.find({ userId: user._id }).sort({ isPinned: -1 });
+        return res.json({ message: "All Notes retrived successfully", notes })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: true, message: "Note retriving failed" })
+    }
+}
+
 export const addNote = async (req, res) => {
     const { title, content, tags } = req.body;
     const { user } = req;
