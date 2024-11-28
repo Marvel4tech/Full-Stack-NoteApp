@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { addNote } from "../controllers/noteControllers.js";
+import { addNote, editNote } from "../controllers/noteControllers.js";
 import { authenticateToken } from "../middleware/authToken.js";
 
 const router = Router()
 
 router.post("/add-note", authenticateToken, addNote)
+router.put("/edit-note/:noteId", authenticateToken, editNote)
 
 export default router;

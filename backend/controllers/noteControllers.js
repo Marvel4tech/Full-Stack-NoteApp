@@ -28,3 +28,46 @@ export const addNote = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error"})
     }
 }
+
+export const editNote = async (req, res) => {
+    const noteId = req.params.noteId
+    const { title, content, tags, isPinned } = req.body
+    const { user } = req;
+
+    if(!title && !content && !tags) {
+        res.status(400).json({ error: true, message: "Please provide at least one field to update." })
+        return
+    }
+
+    try {
+        const editNote = await Note.findOne({ _id: noteId, userId: user._id })
+
+        if (!editNote) {
+            res.status(404).json({ message: "Note not found." })
+            return
+        }
+
+        if (title) {
+            editNote.title = title;
+        }
+
+        if (content) {
+            editNote.content = content;
+        }
+
+        if (tags) {
+            editNote.tags = tags;
+        }
+
+        if (isPinned) {
+            editNote.isPinned = isPinned;
+        }
+        await editNote.save()
+        console.log({ message: "Note updated successfully", editNote })
+        res.status(200).json({ error: false, message: "Note updated successfully", editNote })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: true, message: "Internal Server Error" })
+    }
+}
