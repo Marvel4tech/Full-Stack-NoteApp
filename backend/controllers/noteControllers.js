@@ -140,3 +140,50 @@ export const deleteNote = async (req, res) => {
         
     }
 }
+
+export const updateNotePinned = async (req, res) => {
+    const noteId = req.params.noteId;
+    const { isPinned } = req.body;
+    const { user } = req;
+
+    try {
+        const pinned = await Note.findByIdAndUpdate({ _id: noteId, userId: user._id })
+        if (!pinned) {
+            return res.status(404).json({ message: "Note not found" })
+        }
+        
+        if (isPinned) {
+            pinned.isPinned = isPinned;
+        }
+        await pinned.save()
+        return res.status(200).json({ message: "Note is updated successfully", pinned })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "An error occurred while updating the pinned status of the note." })
+    }
+
+    // Another method to update without using save function
+    /* export const updateNotePinned = async (req, res) => {
+        const noteId = req.params.noteId;
+        const { isPinned } = req.body;
+        const { user } = req;
+    
+        try {
+            // Use findOneAndUpdate to find the note by ID and userId
+            const pinned = await Note.findOneAndUpdate(
+                { _id: noteId, userId: user._id }, // Query to find the note
+                { isPinned }, // Update the isPinned field
+                { new: true } // Option to return the updated document
+            );
+    
+            if (!pinned) {
+                return res.status(404).json({ message: "Note not found" });
+            }
+    
+            return res.status(200).json({ message: "Note is updated successfully", pinned });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "An error occurred while updating the pinned status of the note." });
+        }
+    } */
+}
