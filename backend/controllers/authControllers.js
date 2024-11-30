@@ -33,7 +33,13 @@ export const register = async (req, res) => {
             email,
             password: hashedPassword,
         })
-        res.status(200).json({ message: "Your registration is successfull", registered })
+
+        const token = jwt.sign(
+            { _id: registered._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        )
+        res.status(200).json({ message: "Your registration is successfull", registered, token })
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: "Registration failed" })
@@ -81,6 +87,6 @@ export const getUser = async (req, res) => {
         _id: isUser._id,
         fullName: isUser.fullName,
         email: isUser.email,
-        createdAt: isUser.createdOn
+        createdAt: isUser.createdOn,
     }, message: "" })
 }
