@@ -4,9 +4,9 @@ import { MdClose } from "react-icons/md"
 import axiosInstance from '../../utils/axiosInstance'
 
 const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
-    const [title, setTitle] = useState(noteData.title || "")
-    const [content, setContent] = useState(noteData.content || "")
-    const [tags, setTags] = useState(noteData.tags || [])
+    const [title, setTitle] = useState(noteData?.title || "")
+    const [content, setContent] = useState(noteData?.content || "")
+    const [tags, setTags] = useState(noteData?.tags || [])
 
     const [error, setError] = useState(null)
 
@@ -32,7 +32,39 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
 
     // Edit Note
     const editNote = async () => {
+        const noteId = noteData._id
+        try {
+            const response = await axiosInstance.put("/edit-note/" + noteId, {
+                title,
+                content,
+                tags,
+            })
+            // Log the response to see if it is received correctly
+            console.log("Response from editNote:", response);
 
+            // METHOD 1: but didnt work in this case
+            /* if (response.data && response.data.newNote) {
+                getAllNotes()
+                onClose()
+            }
+            else {
+                console.log("Edit response did not include newNote:", response.data);
+            } */
+
+            
+            // METHOD 2: Call getAllNotes unconditionally if the edit was successful
+            if (response.status === 200) { // Check for a successful response
+                getAllNotes(); // Fetch the updated notes
+                onClose(); // Close the modal
+            } else {
+                console.log("Edit response was not successful:", response.data);
+            }
+        } catch (error) {
+            console.error(error)
+            if (error.response && error.response.data && error.response.message) {
+                setError(error.response.data.message)
+            }
+        }
     }
 
     const handleAddNote = () => {
