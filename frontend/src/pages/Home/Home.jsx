@@ -6,7 +6,7 @@ import AddEditNotes from './AddEditNotes'
 import Modal from 'react-modal'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
-import { ToastContainer } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({ isShown: false, type: "add", data: null })
@@ -55,6 +55,24 @@ const Home = () => {
     }
   }
 
+  // Get Delete Note
+  const deleteNote = async (data) => {
+    const noteId = data._id
+    try {
+      const response = await axiosInstance.delete("/delete-note/" + noteId);
+
+      if (response.status === 200) {
+          toast.success("Deleted Successfully")
+          getAllNotes()
+      }
+    } catch (error) {
+      if (error.message && error.response.data && error.response.data.message) {
+        console.log("An unexpected error occured. Please try again.")
+        toast.error("Deletion failed")
+      }
+    }
+  }
+
   return (
     <>
       <Navbar userInfo={userInfo} />
@@ -69,7 +87,7 @@ const Home = () => {
               content={allNote.content} 
               tags={allNote.tags}
               isPinned={allNote.isPinned} 
-              onEdit={() => handleEdit(allNote)} onDelete={() => {}} onPinNote={() => {}}
+              onEdit={() => handleEdit(allNote)} onDelete={() => deleteNote(allNote)} onPinNote={() => {}}
             />
           ))}
         </div>
