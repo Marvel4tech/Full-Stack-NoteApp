@@ -4,6 +4,7 @@ import PasswordInput from '../../components/Input/PasswordInput'
 import { validateEmail } from '../../utils/helper'
 import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+import { toast } from 'react-toastify'
 
 const SignUp = () => {
     const [name, setName] = useState("")
@@ -43,6 +44,7 @@ const SignUp = () => {
             if (response.data && response.data.token) {
                 localStorage.setItem("token", response.data.token)
                 navigate("/dashboard")
+                toast.success("Account Created Successfully")
             }
 
             if (response.data && response.data.error) {
@@ -52,6 +54,7 @@ const SignUp = () => {
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message)
+                toast.error("Failed to Sign Up")
             } else {
                 setError("An unexpected error occured. Please try again.")
             }

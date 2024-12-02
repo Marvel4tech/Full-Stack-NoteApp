@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import PasswordInput from '../../components/Input/PasswordInput'
 import { validateEmail } from '../../utils/helper'
 import axiosInstance from '../../utils/axiosInstance'
+import { toast } from 'react-toastify'
 
 const Login = () => {
     const [email, setEmail] = useState("")
@@ -34,11 +35,13 @@ const Login = () => {
 
             if (response.data && response.data.token) {
                 localStorage.setItem("token", response.data.token)
-                navigate("/dashboard");
+                navigate("/dashboard")
+                toast.success("Login Successfull")
             }
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message)
+                toast.error("Failed to Login")
             } else {
                 setError("An unexpected error occured. Please try again.")
             }

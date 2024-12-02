@@ -2,6 +2,7 @@ import { useState } from 'react'
 import TagInput from '../../components/Input/TagInput'
 import { MdClose } from "react-icons/md"
 import axiosInstance from '../../utils/axiosInstance'
+import { toast } from 'react-toastify'
 
 const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
     const [title, setTitle] = useState(noteData?.title || "")
@@ -22,10 +23,12 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
             if (response.data && response.data.newNote) {
                 getAllNotes()
                 onClose()
+                toast.success("Note Added Successfully")
             }
         } catch (error) {
             if (error.response && error.response.data && error.response.message) {
                 setError(error.response.data.message)
+                toast.error("Failed to add Note")
             }
         }
     }
@@ -56,6 +59,7 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
             if (response.status === 200) { // Check for a successful response
                 getAllNotes(); // Fetch the updated notes
                 onClose(); // Close the modal
+                toast.success("Note Edited Successfully")
             } else {
                 console.log("Edit response was not successful:", response.data);
             }
@@ -63,6 +67,7 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
             console.error(error)
             if (error.response && error.response.data && error.response.message) {
                 setError(error.response.data.message)
+                toast.error("Failed to edit Note")
             }
         }
     }

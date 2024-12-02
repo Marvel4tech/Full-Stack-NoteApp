@@ -2,15 +2,25 @@ import React, { useState } from 'react'
 import ProfileInfo from '../Cards/ProfileInfo'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../SearchBar/SearchBar'
+import { toast } from 'react-toastify'
 
 const Navbar = ({ userInfo }) => {
   const [searchQuery, setSearchQuery] = useState("")
 
   const navigate = useNavigate()
 
+  //const onLogout = () => {
+    //localStorage.clear()
+    //toast.success("Logout Successfully")
+    //navigate("/login") 
+  //}
+
   const onLogout = () => {
-    localStorage.clear()
-    navigate("/login")
+    localStorage.clear();
+    toast.success("Logout Successfully");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000); // Delay navigation by 1 second
   }
 
   const handleSearch = () => {

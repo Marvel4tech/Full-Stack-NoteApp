@@ -6,9 +6,11 @@ import AddEditNotes from './AddEditNotes'
 import Modal from 'react-modal'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+import { ToastContainer } from "react-toastify"
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({ isShown: false, type: "add", data: null })
+
 
   const [userInfo, setUserInfo] = useState(null)
   const [allNotes, setAllNotes] = useState([])
@@ -58,7 +60,8 @@ const Home = () => {
       <Navbar userInfo={userInfo} />
 
       <div className=' container mx-auto'>
-         <div className=' grid grid-cols-3 gap-4 mt-8'>
+        <ToastContainer />
+        <div className=' grid grid-cols-3 gap-4 mt-8'>
           {allNotes.map((allNote, i) => (
             <NoteCard key={allNote._id} 
               title={allNote.title} 
@@ -69,7 +72,7 @@ const Home = () => {
               onEdit={() => handleEdit(allNote)} onDelete={() => {}} onPinNote={() => {}}
             />
           ))}
-         </div>
+        </div>
       </div>
 
       <button className=' w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 
