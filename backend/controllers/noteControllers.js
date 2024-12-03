@@ -1,3 +1,4 @@
+import { Query } from "mongoose";
 import Note from "../models/noteModel.js"
 
 export const getAllNotes = async (req, res) => {
@@ -186,4 +187,32 @@ export const updateNotePinned = async (req, res) => {
             return res.status(500).json({ message: "An error occurred while updating the pinned status of the note." });
         }
     } */
+}
+
+export const searchNotes = async (req, res) => {
+    const { user } = req;
+    const { query } = req.query;
+
+    if (!query) {
+        return res.status(400).json({ error: true, message: "Please provide a search query." })
+    }
+
+    try {
+        const matchingNotes = await Note.find({
+            userId: user._id,
+            $or: [
+                {title: { $regex: new RegExp(query, "i") } }, // Search for title with case-insensitive match
+                { content: { $regex: new RegExp(query, "i") } }, // Search for content with case-insensitive match
+            ]
+        });
+
+        // Check if there are matching notes
+        if (matchingNotes.length === 0) {
+            return res.json({ message: "No notes found matching the search query.", matchingNotes });
+        }
+
+        return res.json({ message: "Search results retrieved", matchingNotes })
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error" })
+    }
 }
