@@ -7,6 +7,8 @@ import Modal from 'react-modal'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
 import { toast, ToastContainer } from "react-toastify"
+import EmptyCard from '../../components/EmptyCard/EmptyCard'
+import AddNoteImg from "../../assets/images/add-note.jpg"
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({ isShown: false, type: "add", data: null })
@@ -79,7 +81,7 @@ const Home = () => {
 
       <div className=' container mx-auto'>
         <ToastContainer />
-        <div className=' grid grid-cols-3 gap-4 mt-8'>
+        { allNotes.length > 0 ? <div className=' grid grid-cols-3 gap-4 mt-8'>
           {allNotes.map((allNote, i) => (
             <NoteCard key={allNote._id} 
               title={allNote.title} 
@@ -90,7 +92,12 @@ const Home = () => {
               onEdit={() => handleEdit(allNote)} onDelete={() => deleteNote(allNote)} onPinNote={() => {}}
             />
           ))}
-        </div>
+        </div> : 
+          (<EmptyCard 
+            imgSrc={AddNoteImg} 
+            message={`Start creating your first note! Click the 'Add' to jot down your thoughts, ideas, and reminders. 
+            Lets get started!`} 
+          />) }
       </div>
 
       <button className=' w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 
