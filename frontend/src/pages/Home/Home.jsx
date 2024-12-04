@@ -125,11 +125,11 @@ const updateIsPinned = async (noteData) => {
     <>
       <Navbar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch}/>
 
-      <div className=' container mx-auto'>
+      <div className=' container mx-auto px-4'>
         <ToastContainer />
         {loading ? (
           <Loader />
-        ) : allNotes.length > 0 ? ( <div className=' grid grid-cols-3 gap-4 mt-8'>
+        ) : allNotes.length > 0 ? ( <div className=' flex flex-col md:grid md:grid-cols-3 gap-4 mt-8'>
           {allNotes.map((allNote, i) => (
             <NoteCard key={allNote._id} 
               title={allNote.title} 
@@ -145,12 +145,12 @@ const updateIsPinned = async (noteData) => {
             imgSrc={AddNoteImg} 
             message={isSearch ? 
               "No notes found matching your search." : 
-              "Start creating your first note! Click the 'Add' to jot down your thoughts, ideas, and reminders. Lets get started!"} 
+              "Start creating your first note! Click the 'Add' to jot down your thoughts, ideas, and reminders. Lets get started!"}  
           />) }
       </div>
 
-      <button className=' w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 
-      bottom-10 ' onClick={() => {setOpenAddEditModal({ isShown: true, type: "add", data: null})}}>
+      <button className=' w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 fixed right-10 
+      bottom-10 z-50' onClick={() => {setOpenAddEditModal({ isShown: true, type: "add", data: null})}}>
           <MdAdd className=' text-[32px] text-white'/>
       </button>
 
