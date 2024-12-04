@@ -99,6 +99,24 @@ const handleClearSearch = () => {
   getAllNotes()
 }
 
+// Pin Notes
+const updateIsPinned = async (noteData) => {
+  const noteId = noteData._id
+  try {
+    const response = await axiosInstance.put("/update-note-pinned/" + noteId, {
+      isPinned: !noteData.isPinned,
+    })
+
+    if (response.data && response.data.pinned) {
+      toast.success("Pinned Status Updated Successfully")
+      getAllNotes()
+    }
+  } catch (error) {
+    console.log("failed to Pin", error)
+    toast.error(error)
+  }
+}
+
   return (
     <>
       <Navbar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch}/>
@@ -113,7 +131,7 @@ const handleClearSearch = () => {
               content={allNote.content} 
               tags={allNote.tags}
               isPinned={allNote.isPinned} 
-              onEdit={() => handleEdit(allNote)} onDelete={() => deleteNote(allNote)} onPinNote={() => {}}
+              onEdit={() => handleEdit(allNote)} onDelete={() => deleteNote(allNote)} onPinNote={() => updateIsPinned(allNote)}
             />
           ))}
         </div> : 
