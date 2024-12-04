@@ -9,14 +9,15 @@ import axiosInstance from '../../utils/axiosInstance'
 import { toast, ToastContainer } from "react-toastify"
 import EmptyCard from '../../components/EmptyCard/EmptyCard'
 import AddNoteImg from "../../assets/images/add-note.jpg"
+import Loader from '../../components/Loader/Loader'
 
 const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({ isShown: false, type: "add", data: null })
 
-
   const [userInfo, setUserInfo] = useState(null)
   const [allNotes, setAllNotes] = useState([])
   const [isSearch, setIsSearch] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const navigate = useNavigate()
 
@@ -47,14 +48,17 @@ const Home = () => {
 
   // Get All Notes
   const getAllNotes = async () => {
+    setLoading(true)
     try {
       const response = await axiosInstance.get("/get-all-notes")
 
       if (response.data && response.data.notes) {
       setAllNotes(response.data.notes)
-    }
+      }
     } catch (error) {
       console.log("An unexpected error occured. Please try again", error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -123,7 +127,9 @@ const updateIsPinned = async (noteData) => {
 
       <div className=' container mx-auto'>
         <ToastContainer />
-        { allNotes.length > 0 ? <div className=' grid grid-cols-3 gap-4 mt-8'>
+        {loading ? (
+          <Loader />
+        ) : allNotes.length > 0 ? ( <div className=' grid grid-cols-3 gap-4 mt-8'>
           {allNotes.map((allNote, i) => (
             <NoteCard key={allNote._id} 
               title={allNote.title} 
@@ -134,7 +140,7 @@ const updateIsPinned = async (noteData) => {
               onEdit={() => handleEdit(allNote)} onDelete={() => deleteNote(allNote)} onPinNote={() => updateIsPinned(allNote)}
             />
           ))}
-        </div> : 
+        </div>) : 
           (<EmptyCard 
             imgSrc={AddNoteImg} 
             message={isSearch ? 

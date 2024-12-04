@@ -44,7 +44,11 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
           onClearSearch={onClearSearch}
           handleSearch={handleSearch}
         />
-        <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
+        {userInfo ? (
+          <ProfileInfo userInfo={userInfo} onLogout={onLogout} /> 
+        ) : (
+          <button className=' text-sm text-blue-600 border border-blue-600 hover:text-white hover:bg-blue-700 py-1 px-3 rounded' onClick={() => navigate("/login")}>Login</button>  // Login link when user not logged in
+        ) }
     </div>
   )
 }

@@ -10,11 +10,13 @@ const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
     const handleLogin = async (e) => {
         e.preventDefault()
+        setLoading(true)
         if (!validateEmail(email)) {
             setError("Please enter a valid email address.")
             return
@@ -45,6 +47,8 @@ const Login = () => {
             } else {
                 setError("An unexpected error occured. Please try again.")
             }
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -54,7 +58,12 @@ const Login = () => {
 
         <div className=' flex items-center justify-center mt-28'>
             <div className=' w-98 bg-white border rounded px-7 py-10'>
-                <form onSubmit={handleLogin}>
+                {loading ? (
+                    <div>
+                        <p>Loading...</p>
+                    </div>
+                ) : ( 
+                 <form onSubmit={handleLogin}>
                     <h4 className=' text-2xl mb-7'>Login</h4>
                     <input
                         type='text'
@@ -74,7 +83,7 @@ const Login = () => {
                             Create an Account
                         </Link>
                     </p>
-                </form>
+                </form>)}
             </div>
         </div>
     </div>
