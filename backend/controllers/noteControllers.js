@@ -206,7 +206,7 @@ export const searchNotes = async (req, res) => {
             ]
         });
 
-        // Check if there are matching notes
+        // Check if there are no matching notes
         if (matchingNotes.length === 0) {
             return res.json({ message: "No notes found matching the search query.", matchingNotes });
         }

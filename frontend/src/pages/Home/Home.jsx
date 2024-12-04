@@ -16,6 +16,7 @@ const Home = () => {
 
   const [userInfo, setUserInfo] = useState(null)
   const [allNotes, setAllNotes] = useState([])
+  const [isSearch, setIsSearch] = useState(false)
 
   const navigate = useNavigate()
 
@@ -75,9 +76,32 @@ const Home = () => {
     }
   }
 
+  // Search Notes
+const onSearchNote = async (query) => {
+  try {
+    const response = await axiosInstance.get("/search-notes", {
+      params: { query },
+    })
+    console.log(response.data.matchingNotes);
+
+    if (response.data && response.data.matchingNotes) {
+      setIsSearch(true)
+      setAllNotes(response.data.matchingNotes || [])
+    }
+  } catch (error) {
+    console.error("Error searching notes:", error);
+    toast.error("Search failed. Please try again.");
+  }
+}
+
+const handleClearSearch = () => {
+  setIsSearch(false)
+  getAllNotes()
+}
+
   return (
     <>
-      <Navbar userInfo={userInfo} />
+      <Navbar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch}/>
 
       <div className=' container mx-auto'>
         <ToastContainer />
@@ -95,8 +119,9 @@ const Home = () => {
         </div> : 
           (<EmptyCard 
             imgSrc={AddNoteImg} 
-            message={`Start creating your first note! Click the 'Add' to jot down your thoughts, ideas, and reminders. 
-            Lets get started!`} 
+            message={isSearch ? 
+              "No notes found matching your search." : 
+              "Start creating your first note! Click the 'Add' to jot down your thoughts, ideas, and reminders. Lets get started!"} 
           />) }
       </div>
 
