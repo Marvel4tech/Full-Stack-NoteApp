@@ -11,7 +11,7 @@ dbConnection()
 const app = express()
 
 const corsOptions = {
-    origin: "http://localhost:4001",
+    origin: "https://full-stack-note-gmtlr1a8h-marvellous-projects-98ccca32.vercel.app",
     credentials: true,
 }
 app.use(cors(corsOptions))
