@@ -12,6 +12,7 @@ const app = express()
 
 const corsOptions = {
     origin: "https://full-stack-note-gmtlr1a8h-marvellous-projects-98ccca32.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
 }
 app.use(cors(corsOptions))

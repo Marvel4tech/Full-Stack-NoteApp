@@ -1,1 +1,1 @@
-export const BASE_URL = `https://full-stack-noteapp.onrender.com/api`
+export const BASE_URL = `https://full-stack-noteapp.onrender.com`
